@@ -1,7 +1,11 @@
 #ifndef RECURSEFUNCTIONS_CPP
 #define RECURSEFUNCTIONS_CPP
 
+#include <iostream>
 #include "BinaryTree.h"
+#include <Windows.h>
+#include <string>
+using namespace std;
 
 template <class MyType = int>
 void PushItem(MyType _data, int _key, TreeItem<MyType>* &current)
@@ -22,7 +26,7 @@ void PushItem(MyType _data, int _key, TreeItem<MyType>* &current)
 }
 
 template <class MyType = int>
-void HeightRecurse(int &temp, int &max, TreeItem<MyType>* &current)
+void HeightRecurse(int &temp, int &max, TreeItem<MyType>* current)
 {
 	if ((current->left == nullptr) && (current->right == nullptr))
 	{
@@ -36,27 +40,70 @@ void HeightRecurse(int &temp, int &max, TreeItem<MyType>* &current)
 }
 
 template <class MyType = int>
-void LBypass(const TreeItem<MyType>* current)
+void ShowRecurse(const int interval, int &temp, const int limit, const TreeItem<MyType>* current, int &switcher)   // Show only a limit floor
 {
-	if ((current->left == nullptr) && (current->right == nullptr))
+	if (((current->left == nullptr) && (current->right == nullptr)) || (temp == limit))
 	{
-		cout << current->key << endl;
+		if (temp == limit)
+		{
+			SetColor(switcher);
+			cout << current->key << string(interval, ' ');
+		}
+		temp--;
 		return;
 	}
-	if (current->left != nullptr) LBypass(current->left);
-	if (current->right != nullptr) LBypass(current->right);
-}
-
-/*
-template <class MyType = int>
-void ShowRecurse(int &temp, const int limit, const TreeItem<MyType>* &current)
-{
-	while (temp > limit)
-	{
-		if (current->left != nullptr) ShowRecurse(++temp, max, current->left);
-	}
-	if (current->right != nullptr) ShowRecurse(++temp, max, current->right);
+	if (current->left != nullptr) ShowRecurse(interval, ++temp, limit, current->left, switcher);
+	if (current->right != nullptr) ShowRecurse(interval, ++temp, limit, current->right, switcher);
 	--temp;
 }
-*/
+
+template <class MyType = int>
+void FBypass(const TreeItem<MyType>* current) 
+{
+	cout << "Data: " << current->data << endl;
+	cout << "Key : " << current->key << endl;
+	cout << "---\n";
+	if ((current->left == nullptr) && (current->right == nullptr))
+	{
+		return;
+	}
+	if (current->left != nullptr) FBypass(current->left);
+	if (current->right != nullptr) FBypass(current->right);
+}
+
+// a few needed not recurse functions
+
+inline bool isOdd(int integer)
+{
+
+	if (integer % 2 == 0)
+		return false;
+	else
+		return true;
+}
+
+inline void SetColor(int &switcher)
+{
+	if (switcher == 0)
+	{
+		HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hStdOut, (WORD)(0 << 4 | 4));
+		switcher++;
+	}
+ else
+ {
+	 if (isOdd(switcher))
+	 {
+		 HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		 SetConsoleTextAttribute(hStdOut, (WORD)(0 << 4 | (1+switcher > 15) ? switcher - 14 : 1+switcher));
+		 switcher++;
+	 } else
+	 if (!isOdd(switcher))
+	 {
+		 switcher++;
+	 }
+ }
+}
+
+
 #endif

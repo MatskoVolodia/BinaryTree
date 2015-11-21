@@ -4,6 +4,7 @@
 #include "BinaryTree.h"
 #include "RecurseFunctions.cpp"
 #include <iomanip>
+#include <string>
 
 template <class MyType = int>
 BinaryTree<MyType>::BinaryTree()
@@ -24,7 +25,7 @@ void BinaryTree<MyType>::Push(MyType _data, int _key)
 }
 
 template <class MyType = int>
-int BinaryTree<MyType>::GetHeight()
+int BinaryTree<MyType>::GetHeight() const
 {
 	if (root == nullptr) return 0;
 	int temp = 1; int max = 1;
@@ -33,26 +34,54 @@ int BinaryTree<MyType>::GetHeight()
 }
 
 template <class MyType = int>
-void BinaryTree<MyType>::LeftBypass()
+int BinaryTree<MyType>::FrontBypass() const 
 {
-	LBypass(root);
+	if (root == nullptr) return 0;
+	FBypass(root);
+	return 1;
 }
 
-/*
 template <class MyType = int>
-ostream&operator<<(ostream& os, const BinaryTree<MyType> &ob)
+MyType BinaryTree<MyType>::Search(const int _key) const
 {
-	int height = ob.GetHeight();
-	const int blocksize = 5;
-	int interval = pow(2, height) - 1;
-	for (int i = 0; i < height; i++)
+	if (root == nullptr)
 	{
-
+		cout << "Tree is empty.\n";
+		return NULL;
 	}
-
-	return os;
+	TreeItem<MyType>* temp;
+	temp = root;
+	while (temp != nullptr)
+	{
+		if (temp->key == _key)
+		{
+			return temp->data;
+		}
+		if (temp->key > _key) temp = temp->left;
+		if (temp->key < _key) temp = temp->right;
+	}
+	cout << "Element hasn't found. Returned root data.\n";
+	return root->data;
 }
-*/
+
+template <class MyType = int>
+void BinaryTree<MyType>::Show() const
+{
+	int height = GetHeight();
+	const int blocksize = 2;
+	int interval = int(pow(2, height - 1) - 1);  // pow(2,i-1) - count of element in the floor
+	int width = int(pow(2, height - 1)*blocksize + (pow(2,height-1)+1)*interval); // total width of showing screen.
+	int switcher = 0;
+	for (int i = 1; i <= height; i++)
+	{
+		int temp = 1;
+		int CountOfElementInFloor = int(pow(2, i - 1));
+		interval = (width - CountOfElementInFloor*blocksize) / (CountOfElementInFloor+1);
+		cout << string(interval, ' ');
+		ShowRecurse(interval, temp, i, root, switcher);
+		cout << endl;
+	}
+}
 
 template <class MyType = int>
 BinaryTree<MyType>::~BinaryTree()

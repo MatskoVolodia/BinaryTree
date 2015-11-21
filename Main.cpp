@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "BinaryTree.h"
+#include "RecurseFunctions.cpp"
 
 using namespace std;
 
@@ -17,8 +18,12 @@ int main()
 		DataFile >> key;
 		tree.Push(data, key);
 	}
+	
+	tree.FrontBypass();
 
-	tree.LeftBypass();
+	//cout << tree;
+	//tree.Show();
+	//cout << tree.Search(8) << endl;
 	//cout << tree.GetHeight() << endl;
 	DataFile.close();
 	system("pause");
